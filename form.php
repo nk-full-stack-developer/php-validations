@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors',E_ALL);
 
 // Form errors
 $form_errors = [];
@@ -10,7 +11,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
   foreach ($_POST as $field => $value) {
     $_POST[$field] = trim($value);
     if (empty($_POST[$field])) {
-      $form_errors[$field][] = "Please enter ".humanReadbleField($field);
+      $form_errors[$field][] = "Please enter ".ucwords(str_replace('_',' ', $field));
     }
   }
 
@@ -94,6 +95,12 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
         margin: 0 auto;
         width: 50%;
         }
+
+        .text-danger{
+          color: #dc3545;
+          display:block;
+          margin-bottom:10px;
+        }
     </style>
 </head>
 <body>
@@ -103,27 +110,35 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
   <form action="form.php" method="post">
     <label for="first_name">First Name</label>
     <input type="text" id="first_name" name="first_name" placeholder="Your first name..">
+    <span class="text-danger"><?=isset($form_errors['first_name']) ? $form_errors['first_name'][0] : ''?></span>
 
     <label for="last_name">Last Name</label>
     <input type="text" id="last_name" name="last_name" placeholder="Your last name..">
+    <span class="text-danger"><?=isset($form_errors['last_name']) ? $form_errors['first_name'][0] : ''?></span>
 
     <label for="email_address">Email Address</label>
     <input type="text" id="email_address" name="email_address" placeholder="Your email address..">
+    <span class="text-danger"><?=isset($form_errors['email_address']) ? $form_errors['email_address'][0] : ''?></span>
 
     <label for="phone">Phone</label>
     <input type="text" id="phone" name="phone" placeholder="Your phone number..">
+    <span class="text-danger"><?=isset($form_errors['phone']) ? $form_errors['phone'][0] : ''?></span>
 
     <label for="address">Address</label>
     <input type="text" id="address" name="address" placeholder="Your address..">
+    <span class="text-danger"><?=isset($form_errors['address']) ? $form_errors['address'][0] : ''?></span>
 
     <label for="city">City</label>
     <input type="text" id="city" name="city" placeholder="Your city name..">
+    <span class="text-danger"><?=isset($form_errors['city']) ? $form_errors['city'][0] : ''?></span>
 
     <label for="postal_code">Postala Code</label>
-    <input type="text" id="postal_code" postal_code="postal_code" placeholder="Your Postala Code..">
+    <input type="text" id="postal_code" name="postal_code" placeholder="Your Postala Code..">
+    <span class="text-danger"><?=isset($form_errors['postal_code']) ? $form_errors['postal_code'][0] : ''?></span>
 
     <label for="province">Province</label>
-    <input type="text" id="province" postal_code="province" placeholder="Your Province..">
+    <input type="text" id="province" name="province" placeholder="Your Province..">
+    <span class="text-danger"><?=isset($form_errors['province']) ? $form_errors['province'][0] : ''?></span>
 
     <label for="country">Country</label>
     <select id="country" name="country">
@@ -131,13 +146,16 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
       <option value="canada">Canada</option>
       <option value="usa">USA</option>
     </select>
+    <span class="text-danger"><?=isset($form_errors['country']) ? $form_errors['country'][0] : ''?></span>
 
     <label for="password">Password</label>
-    <input type="password" id="password" postal_code="password" placeholder="Your enter Password..">
+    <input type="password" id="password" name="password" placeholder="Your enter Password..">
+    <span class="text-danger"><?=isset($form_errors['password']) ? $form_errors['password'][0] : ''?></span>
 
     <label for="confirm_password">Confirm Password</label>
-    <input type="password" id="confirm_password" postal_code="confirm_password" placeholder="Your Confirm Password..">
-  
+    <input type="password" id="confirm_password" name="confirm_password" placeholder="Your Confirm Password..">
+    <span class="text-danger"><?=isset($form_errors['confirm_password']) ? $form_errors['confirm_password'][0] : ''?></span>
+
     <input type="submit" value="Submit">
   </form>
 </body>
