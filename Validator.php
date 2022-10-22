@@ -127,6 +127,23 @@ class Validator
         }
     }
 
+    /**
+     * Validate that two fields match
+     *
+     * @param array $errors
+     * @param string $field1
+     * @param string $field2
+     * @return void
+     */
+    function validateMatch(string $field1, string $field2): void
+    {
+        $label1 = $this->label($field1);
+        $label2 = $this->label($field2);
+        if ($this->field_values[$field1] !== $this->field_values[$field2]) {
+            $this->validation_errors[$field2][] = "$label1 does not match $label2";
+        }
+    }
+
     /* GETTER METHODS AND UTILITY METHODS
     ----------------------------------------------- */
     /**

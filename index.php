@@ -1,102 +1,151 @@
 <?php
-
-/**
- * Run this file to test your validator Class.
- */
-
-
 require __DIR__ . '/Validator.php';
 
-// Example form POST
+// Form errors
+$form_errors = [];
 
-$_POST = array(
-    'first_name' => '!Developer',  // invalid
-    'last_name' => 'Doe',  // invalid
-    'age' => '78d',  // invalid
-    'email1' => 'davey@',  // invalid
-    'email2' => 'davey@hotmail.com',  // valid
-    'postal_code1' => 'R3G 2J4', // valid
-    'postal_code2' => 'r3g2j4', // valid
-    'postal_code3' => 'rg32j4', // invalid
-    'phone1' => '204-123-1234', // valid
-    'phone2' => '', // invalid
-    'phone3' => '204-1231234', // valid
-    'phone4' => '204.123-1234', // valid
-    'phone5' => '2041231234', // valid
-    'phone6' => '204 123 1234', // valid
-    'phone7' => '204.123.1234', // valid
-    'phone8' => '204123123', // invalid
-    'phone9' => '2-04-123-1234', // invalid
-    'password1' => 'P@ssw0rd1', // valid
-    'password2' => '#passworD1', // valid
-    'password3' => 'passWord1!', // valid
-    'password4' => 'password1', // invalid
-    'password5' => 'password' // invalid
-);
+// Check if request method is post?
+if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
 
-// If you need to pass in another parameter for your constructor,
-// you can modify the following line
-$v = new Validator($_POST);
+    // If you need to pass in another parameter for your constructor,
+    // you can modify the following line
+    $v = new Validator($_POST);
 
-$required = array(
-	'first_name', 'last_name', 'age', 'email1', 'email2',
-	'postal_code1', 'postal_code2', 'postal_code3', 
-	'phone1', 'phone2', 'phone3', 'phone4', 'phone5', 'phone6',
-	'phone7', 'phone8', 'phone9', 'password1', 'password2',
-	'password3', 'password4', 'password5'
-);
+    $required = array(
+        'first_name',
+        'last_name',
+        'email_address',
+        'phone',
+        'address',
+        'city',
+        'postal_code',
+        'province',
+        'country',
+        'password',
+        'confirm_password'
+    );
 
-$v->validateRequired($required);
+    $v->validateRequired($required);
+    $v->validateString('first_name'); 
+    $v->validateString('last_name');
+    $v->validateEmail('email_address');
+    $v->validatePhone('phone');
+    $v->validatePassword('password');
+    $v->validateMatch('password','confirm_password');
 
-$v->validateString('first_name'); 
+    $form_errors = $v->errors();
 
-$v->validateString('last_name');
+    if(count($form_errors) == 0){
+        // Process the form-data
+        echo"<span class='success'>Form Submitted Successfully!</span>";
+        die;
+    }
+}
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validations</title>
+    <style>
 
-$v->validateNumber('age'); 
+        input[type=text], input[type=password], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        }
 
-$v->validateEmail('email1');
+        input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        }
 
-$v->validateEmail('email2');
+        input[type=submit]:hover {
+        background-color: #45a049;
+        }
 
-$v->validatePostalcode('postal_code1');
+        .form_div{
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        margin: 0 auto;
+        width: 50%;
+        }
 
-$v->validatePostalcode('postal_code2');
+        .text-danger{
+          color: #dc3545;
+          display:block;
+          margin-bottom:10px;
+        }
+    </style>
+</head>
+<body>
 
-$v->validatePostalcode('postal_code3');
+<div class="form_div">
+<h3>PHP Server-side form Validations | Sticky values with PHP Class</h3>
+  
+  <form action="index.php" method="post">
+    <label for="first_name">First Name</label>
+    <input type="text" id="first_name" name="first_name" value="<?= $_POST['first_name'] ?>" placeholder="Your first name..">
+    <span class="text-danger"><?=isset($form_errors['first_name']) ? $form_errors['first_name'][0] : ''?></span>
 
-$v->validatePhone('phone1');
+    <label for="last_name">Last Name</label>
+    <input type="text" id="last_name" name="last_name" value="<?= $_POST['last_name'] ?>"  placeholder="Your last name..">
+    <span class="text-danger"><?=isset($form_errors['last_name']) ? $form_errors['first_name'][0] : ''?></span>
 
-$v->validatePhone('phone2');
+    <label for="email_address">Email Address</label>
+    <input type="text" id="email_address" name="email_address" value="<?= $_POST['email_address'] ?>" placeholder="Your email address..">
+    <span class="text-danger"><?=isset($form_errors['email_address']) ? $form_errors['email_address'][0] : ''?></span>
 
-$v->validatePhone('phone3');
+    <label for="phone">Phone</label>
+    <input type="text" id="phone" name="phone" value="<?= $_POST['phone'] ?>"  placeholder="Your phone number..">
+    <span class="text-danger"><?=isset($form_errors['phone']) ? $form_errors['phone'][0] : ''?></span>
 
-$v->validatePhone('phone4');
+    <label for="address">Address</label>
+    <input type="text" id="address" name="address" value="<?= $_POST['address'] ?>" placeholder="Your address..">
+    <span class="text-danger"><?=isset($form_errors['address']) ? $form_errors['address'][0] : ''?></span>
 
-$v->validatePhone('phone5');
+    <label for="city">City</label>
+    <input type="text" id="city" name="city" value="<?= $_POST['city'] ?>" placeholder="Your city name..">
+    <span class="text-danger"><?=isset($form_errors['city']) ? $form_errors['city'][0] : ''?></span>
 
-$v->validatePhone('phone6');
+    <label for="postal_code">Postala Code</label>
+    <input type="text" id="postal_code" name="postal_code" value="<?= $_POST['postal_code'] ?>" placeholder="Your Postala Code..">
+    <span class="text-danger"><?=isset($form_errors['postal_code']) ? $form_errors['postal_code'][0] : ''?></span>
 
-$v->validatePhone('phone7');
+    <label for="province">Province</label>
+    <input type="text" id="province" name="province" value="<?= $_POST['province'] ?>" placeholder="Your Province..">
+    <span class="text-danger"><?=isset($form_errors['province']) ? $form_errors['province'][0] : ''?></span>
 
-$v->validatePhone('phone8');
+    <label for="country">Country</label>
+    <select id="country" name="country">
+      <option value="australia" <?= ($_POST['country'] == 'australia') ? 'selected' : '' ?> >Australia</option>
+      <option value="canada" <?= ($_POST['country'] == 'canada') ? 'selected' : '' ?> >Canada</option>
+      <option value="usa" <?= ($_POST['country'] == 'usa') ? 'selected' : '' ?>>USA</option>
+    </select>
+    <span class="text-danger"><?=isset($form_errors['country']) ? $form_errors['country'][0] : ''?></span>
 
-$v->validatePhone('phone9');
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Your enter Password..">
+    <span class="text-danger"><?=isset($form_errors['password']) ? $form_errors['password'][0] : ''?></span>
 
-$v->validatePassword('password1');
+    <label for="confirm_password">Confirm Password</label>
+    <input type="password" id="confirm_password" name="confirm_password" placeholder="Your Confirm Password..">
+    <span class="text-danger"><?=isset($form_errors['confirm_password']) ? $form_errors['confirm_password'][0] : ''?></span>
 
-$v->validatePassword('password2');
-
-$v->validatePassword('password3');
-
-$v->validatePassword('password4');
-
-$v->validatePassword('password5');
-
-echo '<pre>';
-
-$errors = $v->errors();
-
-print_r($errors);
-
-
+    <input type="submit" value="Submit">
+  </form>
+</body>
+</html>
